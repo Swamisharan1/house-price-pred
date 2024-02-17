@@ -6,7 +6,7 @@ import streamlit as st
 import joblib
 
 # Download the model from GitHub
-url = 'https://github.com/Swamisharan1/house-price-pred/blob/main/model.pkl' 
+url = 'https://raw.githubusercontent.com/Swamisharan1/house-price-pred/main/model.pkl' 
 r = requests.get(url)
 with open('model.pkl', 'wb') as f:
     f.write(r.content)
