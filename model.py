@@ -14,6 +14,10 @@ with open('model.pkl', 'wb') as f:
 # Load the model from the file
 ensemble_best = joblib.load('model.pkl')
 
+# Load the data
+data_url = 'https://raw.githubusercontent.com/Swamisharan1/house-price-pred/main/Housing.csv'  
+df = pd.read_csv(data_url)
+
 # Streamlit app
 st.sidebar.header('User Input Parameters')
 
