@@ -8,8 +8,8 @@ from sklearn.ensemble import VotingRegressor
 import streamlit as st
 
 # Load the data
-url = 'https://github.com/Swamisharan1/house-price-pred/blob/main/Housing.csv' 
-df = pd.read_csv(url, delimiter='\t')
+url = 'https://github.com/Swamisharan1/house-price-pred/blob/main/Housing.csv'  
+df = pd.read_csv(url)
 
 # One-hot encoding
 one_hot = pd.get_dummies(df,columns =['furnishingstatus'],drop_first = True )
@@ -67,34 +67,37 @@ print(f"The R-squared score of the fine-tuned ensemble model on the test set: {r
 st.sidebar.header('User Input Parameters')
 
 def user_input_features():
-    area = st.sidebar.slider('Area', float(data['area'].min()), float(data['area'].max()), float(data['area'].mean()))
-    bedrooms = st.sidebar.slider('Bedrooms', int(data['bedrooms'].min()), int(data['bedrooms'].max()), int(data['bedrooms'].mean()))
-    bathrooms = st.sidebar.slider('Bathrooms', int(data['bathrooms'].min()), int(data['bathrooms'].max()), int(data['bathrooms'].mean()))
-    stories = st.sidebar.slider('Stories', int(data['stories'].min()), int(data['stories'].max()), int(data['stories'].mean()))
+    area = st.sidebar.slider('Area', float(df['area'].min()), float(df['area'].max()), float(df['area'].mean()))
+    bedrooms = st.sidebar.slider('Bedrooms', int(df['bedrooms'].min()), int(df['bedrooms'].max()), int(df['bedrooms'].mean()))
+    bathrooms = st.sidebar.slider('Bathrooms', int(df['bathrooms'].min()), int(df['bathrooms'].max()), int(df['bathrooms'].mean()))
+    stories = st.sidebar.slider('Stories', int(df['stories'].min()), int(df['stories'].max()), int(df['stories'].mean()))
     mainroad = st.sidebar.selectbox('Mainroad', options=['yes', 'no'])
     guestroom = st.sidebar.selectbox('Guestroom', options=['yes', 'no'])
     basement = st.sidebar.selectbox('Basement', options=['yes', 'no'])
     hotwaterheating = st.sidebar.selectbox('Hot Water Heating', options=['yes', 'no'])
     airconditioning = st.sidebar.selectbox('Air Conditioning', options=['yes', 'no'])
-    parking = st.sidebar.slider('Parking', int(data['parking'].min()), int(data['parking'].max()), int(data['parking'].mean()))
+    parking = st.sidebar.slider('Parking', int(df['parking'].min()), int(df['parking'].max()), int(df['parking'].mean()))
     prefarea = st.sidebar.selectbox('Preferred Area', options=['yes', 'no'])
     furnishingstatus = st.sidebar.selectbox('Furnishing Status', options=['furnished', 'semi-furnished', 'unfurnished'])
     data = {'area': area, 'bedrooms': bedrooms, 'bathrooms': bathrooms, 'stories': stories, 'mainroad': mainroad, 'guestroom': guestroom, 'basement': basement, 'hotwaterheating': hotwaterheating, 'airconditioning': airconditioning, 'parking': parking, 'prefarea': prefarea, 'furnishingstatus': furnishingstatus}
-    features = pd.DataFrame(data, index=[0])
-    return features
+    return data
 
-df = user_input_features()
+df_input = pd.DataFrame(user_input_features(), index=[0])
+
+# Concatenate the input data with the training data
+df_combined = pd.concat([df.drop('price', axis=1), df_input], ignore_index=True)
 
 # Perform the same encoding as your training data
 label_encoder = LabelEncoder()
-for column in ['mainroad', 'guestroom', 'basement', 'hotwaterheating', 'airconditioning', 'prefarea', 'furnishingstatus']:
-    df[column] = label_encoder.fit_transform(df[column])
+for column in ['mainroad', 'guestroom', 'basement', 'hotwaterheating', 'airconditioning', 'prefarea']:
+    df_combined[column] = label_encoder.fit_transform(df_combined[column])
 
-# Display user input
-st.subheader('User Input parameters')
-st.write(df)
+# One-hot encoding for 'furnishingstatus'
+df_combined = pd.get_dummies(df_combined, columns=['furnishingstatus'], drop_first=True)
+
+# Separate the input data from the training data
+df_input_encoded = df_combined.iloc[-1:]
 
 # Predict and display the output
-prediction = ensemble_best.predict(df)
-st.subheader('Prediction')
-st.write(prediction)
+prediction = ensemble_best.predict(df_input_encoded)
+st.write(f"Prediction: {prediction}")
