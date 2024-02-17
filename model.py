@@ -9,7 +9,7 @@ import streamlit as st
 
 # Load the data
 url = 'https://github.com/Swamisharan1/house-price-pred/blob/main/Housing.csv'  
-df = pd.read_csv(url)
+df = pd.read_csv(url,delimiter='\t')
 
 # One-hot encoding
 one_hot = pd.get_dummies(df,columns =['furnishingstatus'],drop_first = True )
