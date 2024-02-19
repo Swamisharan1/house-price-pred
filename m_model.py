@@ -15,7 +15,7 @@ import io
 
 #load model
 def load_model():
-    try :
+    try:
         url = "https://raw.githubusercontent.com/ManasiBhavsar/HousePricePrediction/main/rf_model.pkl"
         response = requests.get(url)
         model = pickle.load(io.BytesIO(response.content))
@@ -23,11 +23,14 @@ def load_model():
         print("Model loaded successfully")
         print("Model type:", type(model))
         return model
-    except FileNotFoundError:
-        print("Error: Model file not found")
+    except requests.exceptions.RequestException as e:
+        print("Error fetching model file:", e)
+    except pickle.UnpicklingError as e:
+        print("Error unpickling model file:", e)
     except Exception as e:
         print("Error loading model:", e)
     return None
+
 
 def predict_price(input_data,model):
     """
