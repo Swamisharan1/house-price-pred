@@ -29,7 +29,7 @@ def predict_price(input_data):
     """
     features = np.array([input_data]).reshape(1, -1)
     prediction = model.predict(features)
-    return prediction[0]
+    return prediction  # return the prediction directly
 
 
 
@@ -63,9 +63,9 @@ def main():
     
     # Predict button
     if st.button("Predict"):
-        # Make prediction
-        prediction = predict_price(input_data)
-        st.success(f"The estimated price of the house is ${prediction[0]:,.2f}")
+    # Make prediction
+    prediction = predict_price(input_data)
+    st.success(f"The estimated price of the house is ${prediction:,.2f}")
         
 if __name__ == "__main__":
     main()
