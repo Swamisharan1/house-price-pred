@@ -5,31 +5,39 @@ Created on Fri Feb 16 23:27:32 2024
 @author: manas
 """
 
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 16 23:27:32 2024
+
+@author: manas
+"""
+
 import streamlit as st
 import pandas as pd
-import pickle
 import numpy as np
 import os
 import requests
-import io
+import joblib
 
 #load model
 def load_model():
-    try:
-        url = "https://raw.githubusercontent.com/Swamisharan1/house-price-pred/main/model.pkl"
+    try :
+        url = "https://raw.githubusercontent.com/Swamisharan1/house-price-pred/main/rf_model.pkl"
         response = requests.get(url)
-        model = pickle.load(io.BytesIO(response.content))
+        with open('rf_model.pkl', 'wb') as f:
+            f.write(response.content)
+        model = joblib.load('rf_model.pkl')
         
         print("Model loaded successfully")
         print("Model type:", type(model))
         return model
-    except requests.exceptions.RequestException as e:
-        print("Error fetching model file:", e)
-    except pickle.UnpicklingError as e:
-        print("Error unpickling model file:", e)
+    except FileNotFoundError:
+        print("Error: Model file not found")
     except Exception as e:
         print("Error loading model:", e)
     return None
+
+
 
 
 def predict_price(input_data,model):
