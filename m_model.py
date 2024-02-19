@@ -10,28 +10,28 @@ import pickle
 import numpy as np
 import os
 import requests
-import joblid
-
+import joblib
 
 model_url='https://raw.githubusercontent.com/ManasiBhavsar/House-Price-Prediction/main/finalized_model.sav'
 r=requests.get(model_url)
 
-if responsee.status_code==200:
+if r.status_code==200:
     with open('finalized_model.sav','wb') as f:
         f.write(r.content)
 else:
     print("Failed to download the model file")
     
-model = joblid.load('finalized_model.sav')
-# Load the model
+model = joblib.load('finalized_model.sav')
 
 def predict_price(input_data):
     """
     Function to predict house price based on the input features.
     """
     features = np.array([input_data]).reshape(1, -1)
-    prediction = loaded_model.predict(features)
+    prediction = model.predict(features)
     return prediction[0]
+
+
 
 # Streamlit app
 def main():
