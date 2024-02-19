@@ -16,7 +16,7 @@ import io
 #load model
 def load_model():
     try:
-        url = "https://raw.githubusercontent.com/ManasiBhavsar/HousePricePrediction/main/rf_model.pkl"
+        url = "https://raw.githubusercontent.com/Swamisharan1/house-price-pred/main/rf_model.pkl"
         response = requests.get(url)
         model = pickle.load(io.BytesIO(response.content))
         
