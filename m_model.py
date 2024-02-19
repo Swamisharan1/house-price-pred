@@ -22,11 +22,11 @@ import joblib
 #load model
 def load_model():
     try :
-        url = "https://raw.githubusercontent.com/Swamisharan1/house-price-pred/main/rf_model.pkl"
+        url = "https://raw.githubusercontent.com/Swamisharan1/house-price-pred/main/model.pkl"
         response = requests.get(url)
-        with open('rf_model.pkl', 'wb') as f:
+        with open('model.pkl', 'wb') as f:
             f.write(response.content)
-        model = joblib.load('rf_model.pkl')
+        model = joblib.load('model.pkl')
         
         print("Model loaded successfully")
         print("Model type:", type(model))
