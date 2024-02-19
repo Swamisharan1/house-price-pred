@@ -4,48 +4,33 @@ Created on Fri Feb 16 23:27:32 2024
 
 @author: manas
 """
-
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 16 23:27:32 2024
-
-@author: manas
-"""
-
 import streamlit as st
 import pandas as pd
+import pickle
 import numpy as np
 import os
 import requests
-import joblib
-
-#load model
-def load_model():
-    try :
-        url = "https://raw.githubusercontent.com/Swamisharan1/house-price-pred/main/model.pkl"
-        response = requests.get(url)
-        with open('model.pkl', 'wb') as f:
-            f.write(response.content)
-        model = joblib.load('model.pkl')
-        
-        print("Model loaded successfully")
-        print("Model type:", type(model))
-        return model
-    except FileNotFoundError:
-        print("Error: Model file not found")
-    except Exception as e:
-        print("Error loading model:", e)
-    return None
+import joblid
 
 
+model_url='https://raw.githubusercontent.com/ManasiBhavsar/House-Price-Prediction/main/finalized_model.sav'
+r=requests.get(model_url)
 
+if responsee.status_code==200:
+    with open('finalized_model.sav','wb') as f:
+        f.write(r.content)
+else:
+    print("Failed to download the model file")
+    
+model = joblid.load('finalized_model.sav')
+# Load the model
 
-def predict_price(input_data,model):
+def predict_price(input_data):
     """
     Function to predict house price based on the input features.
     """
     features = np.array([input_data]).reshape(1, -1)
-    prediction = model.predict(features)
+    prediction = loaded_model.predict(features)
     return prediction[0]
 
 # Streamlit app
@@ -53,7 +38,8 @@ def main():
     st.title("House Price Prediction App")
     st.write("Select values for each feature to predict the house price.")
 
-    model=load_model()
+    #model=pickle.load(open('https://github.com/ManasiBhavsar/House-Price-Prediction/blob/main/trained_model.sav','rb'))
+
 
     # Dropdown menus for each column in the dataset
     area = st.number_input("Area (in square feet)",min_value=1600,max_value=16000)
@@ -73,12 +59,12 @@ def main():
     input_data =(area, bedrooms, bathrooms, stories, mainroad, guestroom, basement, hotwaterheating,
                                 airconditioning, parking, prefarea, furnishingstatus)
     
-    input_data = (np.array(input_data)).reshape(1,-1)
+    #input_data = (np.array(input_data)).reshape(1,-1)
     
     # Predict button
     if st.button("Predict"):
         # Make prediction
-        prediction = model.predict(input_data)
+        prediction = predict_price(input_data)
         st.success(f"The estimated price of the house is ${prediction[0]:,.2f}")
         
 if __name__ == "__main__":
