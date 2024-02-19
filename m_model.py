@@ -66,7 +66,7 @@ def main():
     # Make prediction
         prediction = predict_price(input_data)
         prediction_in_original_scale = prediction[0] * 100000
-        st.success(f"The estimated price of the house is ${prediction[0]:,.2f}")
+        st.success(f"The estimated price of the house is ${prediction_in_original_scale:,.2f}")
         
 if __name__ == "__main__":
     main()
