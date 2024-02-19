@@ -65,7 +65,8 @@ def main():
     if st.button("Predict"):
     # Make prediction
         prediction = predict_price(input_data)
-        st.success(f"The estimated price of the house is ${prediction[0]:,.8f}")
+        prediction_in_original_scale = prediction[0] * 100000
+        st.success(f"The estimated price of the house is ${prediction[0]:,.2f}")
         
 if __name__ == "__main__":
     main()
